@@ -25,6 +25,14 @@ pipeline {
             steps {
                 bat 'docker build -t penguin-species-app .'
             }
+        } 
+
+        stage("Run Docker Container") { 
+            steps {
+                bat 'docker stop penguin-species-container || exit 0'
+                bat 'docker rm penguin-species-container || exit 0'
+                bat 'docker run -d -p 8501:8501 --name penguin-species-container penguin-species-app'
+            }
         }
     }
 
