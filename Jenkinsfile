@@ -25,9 +25,30 @@ pipeline {
             steps {
                 bat 'docker build -t penguin-species-app .'
             }
-        } 
+        }
 
-        stage("Run Docker Container") { 
+        stage('Docker Login') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'docker-hub-credentials',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                bat 'docker tag penguin-species-app palanikumaran/penguin_species_predictor:latest'
+                bat 'docker push palanikumaran/penguin_species_predictor:latest'
+            }
+        }
+
+        stage('Run Docker Container') {
             steps {
                 bat 'docker stop penguin-species-container || exit 0'
                 bat 'docker rm penguin-species-container || exit 0'
