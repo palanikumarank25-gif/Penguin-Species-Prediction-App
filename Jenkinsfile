@@ -21,12 +21,6 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                bat 'docker build -t penguin-species-app .'
-            }
-        }
-
         stage('Docker Login') {
             steps {
                 withCredentials([
@@ -38,6 +32,12 @@ pipeline {
                 ]) {
                     bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
                 }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t penguin-species-app .'
             }
         }
 
