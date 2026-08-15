@@ -33,7 +33,7 @@ pipeline {
                     bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
                 }
             }
-        }
+        } 
 
         stage('Build Docker Image') {
             steps {
